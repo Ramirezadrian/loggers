@@ -7,7 +7,7 @@ const flash = require('connect-flash')
 const dotenv = require('dotenv')
 const parseArgs = require('minimist')
 const cluster = require('cluster')
-
+const compression = require('compression')
 const numCPUs = require('os').cpus().length
  
 
@@ -45,7 +45,7 @@ const { createHash, isValidPassword } = require('./utils')
 const app = express()
 app.use(express.static('./public'))
 app.set('view engine', 'ejs')
-
+app.use(compression())
 app.use(flash())
 
 app.use(session({
@@ -234,29 +234,6 @@ if(args.type === 'FORK'){
   app.listen(PORT, process.env.HOST, () => console.log(`Servidor corriendo en http://${process.env.HOST}:${PORT}`))
  }
 
-
- // ******  EJECUTAR EL SERVIDOR CON  FOREVER   ********
-/*
-info:    Forever processes running
-data:        uid  command                            script                                                                     forever pid   id logfile                          uptime
-data:    [0] oD8P "C:\Program Files\nodejs\node.exe" C:\Users\aeram\Documents\CoderHouse\Backend\Desafios\proxy\main.js         9428    17572    C:\Users\aeram\.forever\oD8P.log 0:0:0:1.076
-data:    [1] r_in "C:\Program Files\nodejs\node.exe" C:\Users\aeram\Documents\CoderHouse\Backend\Desafios\proxy\main.js -p 8081 16724   7460     C:\Users\aeram\.forever\r_in.log 0:0:0:1.061 
-*/
-
-
- // ******  EJECUTAR EL SERVIDOR CON  PM2   ********
-
-/*
-┌─────┬─────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
-│ id  │ name    │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
-├─────┼─────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 0   │ main    │ default     │ 1.0.0   │ cluster │ 17660    │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ aeram    │ disabled │
-│ 1   │ main    │ default     │ 1.0.0   │ cluster │ 11432    │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ aeram    │ disabled │
-│ 2   │ main    │ default     │ 1.0.0   │ cluster │ 18212    │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ aeram    │ disabled │
-│ 3   │ main    │ default     │ 1.0.0   │ cluster │ 9120     │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ aeram    │ disabled │
-│ 4   │ main    │ default     │ 1.0.0   │ cluster │ 6136     │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ aeram    │ disabled │
-│ 5   │ main    │ default     │ 1.0.0   │ cluster │ 15884    │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ aeram    │ disabled │
-│ 6   │ main    │ default     │ 1.0.0   │ cluster │ 14812    │ 3s     │ 0    │ online    │ 86%      │ 61.7mb   │ aeram    │ disabled │
-│ 7   │ main    │ default     │ 1.0.0   │ cluster │ 8116     │ 3s     │ 0    │ online    │ 81.2%    │ 54.1mb   │ aeram    │ disabled │
-└─────┴─────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-*/
+//****************  /INFO  ***************
+//   SIN COMPRESION Content-Length: 1729
+//   CON COMPRESION Content-Length: 1.3 kB
