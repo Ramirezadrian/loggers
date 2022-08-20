@@ -9,6 +9,7 @@ const parseArgs = require('minimist')
 const cluster = require('cluster')
 const compression = require('compression')
 const numCPUs = require('os').cpus().length
+const log4js = require('log4js')
  
 
 
@@ -37,7 +38,7 @@ options.alias = {
 
 const args = parseArgs(process.argv.slice(2), options) 
 
-mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/desafioSesion`)
+//mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/desafioSesion`)
 const User = require('./models/user')
 
 const { createHash, isValidPassword } = require('./utils')
@@ -52,9 +53,9 @@ app.use(session({
   secret: 'qwerty',
   resave: true,
   saveUninitialized: true,
-  cookie: {
+/*   cookie: {
     maxAge: 100000,
-  }
+  } */
 }))
 
 app.use(passport.initialize())
@@ -62,6 +63,25 @@ app.use(passport.session())
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+
+//  ********  LOGS  ********
+
+log4js.configure({
+  appenders: {
+    miLoggerConsole: { type: "console" },
+    miLoggerFile: { type: 'file', filename: 'warn.log' },
+    miLoggerFile2: { type: 'file', filename: 'error.log' }
+  },
+  categories: {
+    default: { appenders: ["miLoggerConsole"], level: "info" },
+    archwarn: { appenders: ["miLoggerFile"], level: "warn" },
+    archerr: { appenders: ["miLoggerFile2"], level: "error" }
+  }
+ })
+
+ const logger = log4js.getLogger('default')
+ const logwarn = log4js.getLogger('warn')
 
 passport.use('login', new LocalStrategy((username, password, done) => {
   return User.findOne({username})
@@ -119,6 +139,16 @@ passport.deserializeUser((id, done) => {
 }) 
 
 app.get('/info', (req, res) =>{
+  logger.info(`/info`)
+  logger.info(`Argumentos de entrada: ${JSON.stringify(args,null,2)}
+               Path de ejecucion: ${process.execPath}
+               Nombre de la plataforma: ${process.platform}
+               Process ID: ${process.pid}
+               Version de Node: ${process.version}
+               Carpeta del proyecto: ${process.cwd()}
+               Memoria total reservada: ${JSON.stringify(process.memoryUsage(), null, 2)}
+               Numeros de CPUs: ${numCPUs}
+  `)
   return res.render('info',{
     arg: `Argumentos de entrada: ${JSON.stringify(args,null,2)}`,
     path: `Path de ejecucion: ${process.execPath}`,
@@ -129,6 +159,7 @@ app.get('/info', (req, res) =>{
     memoria: `Memoria total reservada: ${JSON.stringify(process.memoryUsage(), null, 2)}`,
     cpus: `Numeros de CPUs: ${numCPUs}`
   })
+ 
 })
 
 app.get('/signup', (req, res) => {
