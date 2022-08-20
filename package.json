@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node benchmark.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Ramirezadrian/cookiesAndSessions#readme",
   "dependencies": {
+    "0x": "^5.4.1",
+    "autocannon": "^7.9.0",
     "bcrypt": "^5.0.1",
     "cluster": "^0.7.7",
     "compression": "^1.7.4",

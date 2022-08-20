@@ -139,7 +139,7 @@ passport.deserializeUser((id, done) => {
 }) 
 
 app.get('/info', (req, res) =>{
-  logger.info(`/info`)
+    logger.info(`/info`)
   logger.info(`Argumentos de entrada: ${JSON.stringify(args,null,2)}
                Path de ejecucion: ${process.execPath}
                Nombre de la plataforma: ${process.platform}
@@ -148,7 +148,7 @@ app.get('/info', (req, res) =>{
                Carpeta del proyecto: ${process.cwd()}
                Memoria total reservada: ${JSON.stringify(process.memoryUsage(), null, 2)}
                Numeros de CPUs: ${numCPUs}
-  `)
+  `) 
   return res.render('info',{
     arg: `Argumentos de entrada: ${JSON.stringify(args,null,2)}`,
     path: `Path de ejecucion: ${process.execPath}`,
